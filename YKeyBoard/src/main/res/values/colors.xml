@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="keyboardNormal">#1c69ac</color>
+    <color name="keyboardDeep">#991c69ac</color>
+    <color name="keyboardPress">#1296db</color>
+    <color name="keyboardKeyBack">#474749</color>
+</resources>

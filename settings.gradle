@@ -1,0 +1,3 @@
+include ':YKeyBoard'
+include ':app'
+rootProject.name = "YKeyBoard"
