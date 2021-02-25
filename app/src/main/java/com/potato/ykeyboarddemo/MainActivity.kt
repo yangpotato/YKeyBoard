@@ -38,7 +38,8 @@ class MainActivity : AppCompatActivity(), KeyboardView.OnKeyboardActionListener 
 //        mKeyBoardView.isPreviewEnabled = false;
 //        mKeyBoardView.visibility = View.VISIBLE;
 //        mKeyBoardView.setOnKeyboardActionListener(this);
-        KeyboardUtil(this, mKeyBoardView, mEdt)
+//        KeyboardUtil(this, mKeyBoardView, mEdt)
+        mKeyBoardView.putEditText(mEdt)
     }
 
     override fun swipeRight() {

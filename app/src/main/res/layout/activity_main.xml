@@ -3,16 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.potato.ykeyboarddemo.MainActivity">
+    android:layout_height="match_parent">
     <EditText
         android:id="@+id/edt"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <com.potato.ykeyboard.YKeyBoardView
         android:id="@+id/key_board"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        app:layout_constraintTop_toBottomOf="@id/edt"
+        app:text_size="18sp"
         android:keyBackground="@drawable/keyboard_press_bg"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
