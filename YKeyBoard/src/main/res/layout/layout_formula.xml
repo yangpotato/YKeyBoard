@@ -2,12 +2,15 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingStart="7.5dp"
+    android:paddingEnd="7.5dp">
     <com.potato.ykeyboard.SelectEditText
         android:id="@+id/tv_formula"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14dp"
         android:padding="10dp"
-        android:background="#ff0000"/>
+        android:singleLine="true"
+        android:background="@drawable/shape_popup_edit_bg"/>
 </FrameLayout>

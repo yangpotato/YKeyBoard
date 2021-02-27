@@ -23,7 +23,8 @@ class YKeyBoardView @JvmOverloads constructor(
     private lateinit var mEditText : EditText
     private var mPopup: YKeyBoardPopup? = null
     private var formula: String = ""
-    private var mEditable : Editable? = null
+    private var mPopupEditText : EditText? = null
+    private var mPopupEditable: Editable? = null
     init {
         mPaint.textAlign = Paint.Align.CENTER
         mPaint.color = Color.BLACK
@@ -39,7 +40,8 @@ class YKeyBoardView @JvmOverloads constructor(
         }
         attributes.recycle()
         mPopup = YKeyBoardPopup(context)
-        mEditable = mPopup?.mEdtFormula?.text
+        mPopupEditText = mPopup?.mEdtFormula
+        mPopupEditable = mPopupEditText?.text
         initKeyBoard()
     }
 
@@ -92,54 +94,70 @@ class YKeyBoardView @JvmOverloads constructor(
         val editable = mEditText.text
         val start = mEditText.selectionStart
         val end = mEditText.selectionEnd
+        if(editable == null)
+            return
         when(primaryCode){
             Keyboard.KEYCODE_DELETE -> {
                 //删除键
-                if (editable != null && editable.isNotEmpty()) {
-                    if (start == end) {
-                        editable.delete(start - 1, start)
-                    } else {
-                        editable.delete(start, end)
-                    }
-                    formula = editable.toString()
-                    mPopup?.setFormula(formula)
+                if(editable.toString().isEmpty() || isOperatorFormula(mPopupEditable.toString())) {
+                    deleteEditable(editable, start, end)
+                    deleteEditable(mPopupEditable, mPopupEditText?.selectionStart!!, mPopupEditText?.selectionEnd!!)
+                    mPopup?.dismiss()
+                }else{
+                    deleteEditable(mPopupEditable, mPopupEditText?.selectionStart!!, mPopupEditText?.selectionEnd!!)
                 }
             }
             43 -> {
                 //加号
-                addFloatView(editable, start, end, primaryCode.toChar().toString())
+                setFormula(primaryCode)
             }
             else -> {
-                setEditable(editable, start, end, primaryCode)
-
-                formula = editable.toString()
-                mPopup?.setFormula(formula)
-
-                var matcher  = Pattern.compile("^[0-9]*\$").matcher(formula).matches();
-                Log.i("YPOTATO", "matcher: $matcher")
-
+                if(editable.toString().isEmpty() || isOperatorFormula(mPopupEditable.toString()))
+                    setEditable(editable, start, end, primaryCode)
+                setEditable(mPopupEditable, mPopupEditText?.selectionStart!!, mPopupEditText?.selectionEnd!!, primaryCode)
             }
         }
     }
 
+    /**
+     * 判断是否含有运算符
+     */
+    private fun isOperatorFormula(str: String): Boolean{
+        val result = Pattern.compile("^\\d+(\\.\\d+)?\$").matcher(str).matches()
+        Log.i("YPOTATO", "校验字符: $str, 校验结果: $result")
+        return result
+    }
+
+    private fun deleteEditable(editable: Editable?, start: Int, end: Int){
+        if (editable == null)
+            return
+        if (editable.isNotEmpty()) {
+            if (start == end) {
+                editable.delete(start - 1, start)
+            } else {
+                editable.delete(start, end)
+            }
+//            formula = editable.toString()
+//            mPopup?.setFormula(formula)
+        }
+    }
+
     private fun setEditable(editable: Editable?, start: Int, end: Int, primaryCode: Int) {
-        editable!!.replace(
+        editable?.replace(
             start,
             end,
             primaryCode.toChar().toString()
         )
     }
 
-    private fun addFloatView(editable: Editable, start: Int, end: Int, text: CharSequence ) {
-        val string = editable
-        string.replace(
-            start,
-            end,
-            text
+    private fun setFormula(primaryCode: Int) {
+        mPopupEditable?.replace(
+            mPopupEditText?.selectionStart!!,
+            mPopupEditText?.selectionEnd!!,
+            primaryCode.toChar().toString()
         )
-
-        mPopup?.setFormula(string.toString())
         mPopup?.show(this, measuredHeight)
+//        mPopup?.setFormula(string.toString())
     }
 
     override fun onText(text: CharSequence?) {
